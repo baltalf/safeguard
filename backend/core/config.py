@@ -43,6 +43,14 @@ class Settings(BaseSettings):
     AVALANCHE_CONTRACT_ADDRESS: str = ""  # se llena después del deploy
     BLOCKCHAIN_ENABLED: bool = True  # False = modo sin blockchain para dev
 
+    # IPFS Pinata
+    PINATA_JWT: str = ""  # vacío = IPFS deshabilitado
+    PINATA_GATEWAY: str = "https://gateway.pinata.cloud/ipfs"
+
+    # Genlayer
+    GENLAYER_SIMULATOR_URL: str = ""  # vacío = modo mock
+    GENLAYER_CONTRACT_ADDRESS: str = ""
+
     class Config:
         env_file = ".env"
 

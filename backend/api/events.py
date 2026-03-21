@@ -12,6 +12,14 @@ from db.database import async_session_maker
 from db.models import Event
 from blockchain.avalanche_client import avalanche_client
 
+class DisputeResponse(BaseModel):
+    event_id: str
+    hash_sha256: str
+    blockchain_tx: str | None
+    frame_urls: list[str]
+    genlayer_verdict: str
+    dispute_status: str
+
 router = APIRouter()
 
 
@@ -72,4 +80,60 @@ async def verify_event_endpoint(event_id: str) -> dict[str, Any]:
             "verified": verified,
             "blockchain_status": str(ev.blockchain_status) if ev.blockchain_status else None
         }
+
+
+@router.post("/{event_id}/dispute", response_model=DisputeResponse)
+async def create_dispute(event_id: str) -> DisputeResponse:
+    import logging
+    logger = logging.getLogger(__name__)
+    logger.info(f"[INFO] Iniciando disputa para evento {event_id}")
+    
+    async with async_session_maker() as session:
+        result = await session.execute(select(Event).where(Event.id == event_id))
+        ev = result.scalar_one_or_none()
+        if not ev:
+            raise HTTPException(status_code=404, detail="Event not found")
+            
+        if not ev.hash_sha256 or not ev.clip_path:
+            raise HTTPException(status_code=400, detail="Event missing hash or clip")
+            
+        key_frames = (ev.event_metadata or {}).get("key_frames", [])
+        if not key_frames:
+            raise HTTPException(status_code=400, detail="No key frames available")
+            
+        from integrations.ipfs_client import pinata_client
+        logger.info(f"[INFO] Subiendo {len(key_frames)} frames a IPFS...")
+        if pinata_client.is_configured():
+            frame_urls = await pinata_client.upload_files(key_frames)
+        else:
+            frame_urls = [f"local://{p}" for p in key_frames]
+            
+        logger.info(f"[INFO] Frames subidos: {frame_urls}")
+            
+        from integrations.genlayer_client import genlayer_client
+        logger.info("[INFO] Solicitando veredicto a Genlayer...")
+        
+        verdict = await genlayer_client.request_verdict(
+            hash_sha256=ev.hash_sha256,
+            frame_urls=frame_urls,
+            event_type=ev.type,
+            context=f"Módulo: {ev.module}, Timestamp: {ev.timestamp}"
+        )
+        
+        logger.info(f"[INFO] Veredicto recibido: {verdict}")
+        logger.info(f"[INFO] Disputa resuelta: {event_id} → {verdict}")
+        
+        ev.genlayer_verdict = verdict
+        session.add(ev)
+        await session.commit()
+        await session.refresh(ev)
+        
+        return DisputeResponse(
+            event_id=str(ev.id),
+            hash_sha256=str(ev.hash_sha256),
+            blockchain_tx=str(ev.blockchain_tx) if ev.blockchain_tx else None,
+            frame_urls=frame_urls,
+            genlayer_verdict=verdict,
+            dispute_status="resolved"
+        )
 
