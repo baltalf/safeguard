@@ -40,6 +40,7 @@ const TRAMOS: Record<string, string[]> = {
   'VJE-002': ['Mendoza → San Luís', 'San Luís → Córdoba', 'Córdoba → BA'],
   'VJE-003': ['Rosario → Zárate', 'Zárate → BA'],
 };
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8001';
 
 function statusBadge(status: string) {
   if (status === 'en_ruta') return <span className="badge badge-green">En ruta</span>;
@@ -112,7 +113,7 @@ function ClipsModal({ trip, onClose }: { trip: Trip; onClose: () => void }) {
                   </button>
                   {openVideos[999] && (
                     <video controls style={{ width: '100%', borderRadius: 8, display: 'block', background: '#0F172A', marginTop: 10 }}>
-                      <source src="http://localhost:8001/api/media/video_normal.mp4" type="video/mp4" />
+                      <source src={`${API_URL}/api/media/video_normal.mp4`} type="video/mp4" />
                     </video>
                   )}
                 </div>
@@ -141,7 +142,7 @@ function ClipsModal({ trip, onClose }: { trip: Trip; onClose: () => void }) {
 
                     {openVideos[1000 + i] && (
                       <video controls style={{ width: '100%', borderRadius: 8, display: 'block', background: '#0F172A', marginBottom: 10 }}>
-                        <source src="http://localhost:8001/api/media/video_robo.mp4" type="video/mp4" />
+                        <source src={`${API_URL}/api/media/video_robo.mp4`} type="video/mp4" />
                       </video>
                     )}
                     
@@ -204,7 +205,7 @@ function ClipsModal({ trip, onClose }: { trip: Trip; onClose: () => void }) {
 
                   {openVideos[i] && (
                     <video controls style={{ width: '100%', borderRadius: 8, display: 'block', background: '#0F172A', marginTop: 10 }}>
-                      <source src="http://localhost:8001/api/media/video_normal.mp4" type="video/mp4" />
+                      <source src={`${API_URL}/api/media/video_normal.mp4`} type="video/mp4" />
                     </video>
                   )}
                 </div>

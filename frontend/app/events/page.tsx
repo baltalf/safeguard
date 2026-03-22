@@ -16,13 +16,14 @@ function relativeTime(iso: string | null): string {
   if (h < 24) return `hace ${h}h`;
   return `hace ${Math.floor(h / 24)}d`;
 }
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8001';
 
 function getVideoSrc(cameraId: string | null): string {
-  if (!cameraId) return 'http://localhost:8001/api/media/video_robo.mp4';
-  if (cameraId.includes('TRK-01')) return 'http://localhost:8001/api/media/video_robo.mp4';
-  if (cameraId.includes('TRK-02')) return 'http://localhost:8001/api/media/video_normal.mp4';
-  if (cameraId.includes('TRK-03')) return 'http://localhost:8001/api/media/video_inconcluso.mp4';
-  return 'http://localhost:8001/api/media/video_robo.mp4';
+  if (!cameraId) return `${API_URL}/api/media/video_robo.mp4`;
+  if (cameraId.includes('TRK-01')) return `${API_URL}/api/media/video_robo.mp4`;
+  if (cameraId.includes('TRK-02')) return `${API_URL}/api/media/video_normal.mp4`;
+  if (cameraId.includes('TRK-03')) return `${API_URL}/api/media/video_inconcluso.mp4`;
+  return `${API_URL}/api/media/video_robo.mp4`;
 }
 
 interface VerdictMeta {
@@ -130,7 +131,7 @@ function ExpandedEvent({ event, onClose }: { event: SGEvent; onClose: () => void
   const handleAnalyze = async () => {
     setAnalyzing(true);
     try {
-      const res = await fetch(`http://localhost:8001/api/events/${localEvent.id}/dispute`, { method: 'POST' });
+      const res = await fetch(`${API_URL}/api/events/${localEvent.id}/dispute`, { method: 'POST' });
       if (res.ok) {
         const data = await res.json();
         setLocalEvent(prev => ({ ...prev, genlayer_verdict: data.genlayer_verdict, blockchain_tx: data.blockchain_tx || prev.blockchain_tx }));
@@ -405,7 +406,7 @@ export default function EventsPage() {
   const handleSeed = async () => {
     setSeeding(true);
     try {
-      const res = await fetch('http://localhost:8001/api/events/demo/seed', { method: 'POST' });
+      const res = await fetch(`${API_URL}/api/events/demo/seed`, { method: 'POST' });
       if (res.ok) setTimeout(loadEvents, 500);
     } catch { /* ignore */ } finally {
       setSeeding(false);
