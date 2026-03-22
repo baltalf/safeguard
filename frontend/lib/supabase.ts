@@ -1,11 +1,13 @@
 import { createClient } from '@supabase/supabase-js'
 
+// La URL estaba funcionando bien, así que la dejamos como estaba
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
 
-// Modo Hackathon Debug: Verificamos qué está llegando realmente
-console.log("=== CHECK SUPABASE ===");
-console.log("URL:", supabaseUrl ? "Existe ✔️" : "VACÍA ❌");
-console.log("KEY:", supabaseKey ? `Empieza con ${supabaseKey.substring(0, 10)}... ✔️` : "VACÍA ❌");
+// 🔥 MODO HACKATHON: Hardcodeamos la llave pública para saltear el bug de Vercel
+const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVtb3ZmdHZpeGlhd2tkeGZibWRjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQwOTQ5ODgsImV4cCI6MjA4OTY3MDk4OH0.iuHQggg47SQp7UVaF9PW3_QMyq9RCXdIVpZNjd6bHmI"
+
+// Dejamos un log chiquito para confirmar que ahora sí la está tomando
+console.log("=== SUPERVIVENCIA HACKATHON ===");
+console.log("KEY FORZADA:", supabaseKey.substring(0, 15) + "...");
 
 export const supabase = createClient(supabaseUrl, supabaseKey)
