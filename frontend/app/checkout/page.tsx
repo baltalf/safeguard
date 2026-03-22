@@ -25,7 +25,7 @@ function CheckoutContent() {
   const handlePay = async () => {
     setLoading(true)
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8001'}/api/payments/create-preference`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://5695-200-80-213-210.ngrok-free.app'}/api/payments/create-preference`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

@@ -16,7 +16,7 @@ function relativeTime(iso: string | null): string {
   if (h < 24) return `hace ${h}h`;
   return `hace ${Math.floor(h / 24)}d`;
 }
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8001';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://5695-200-80-213-210.ngrok-free.app';
 
 function getVideoSrc(cameraId: string | null): string {
   if (!cameraId) return `${API_URL}/api/media/video_robo.mp4`;

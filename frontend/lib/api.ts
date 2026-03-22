@@ -1,4 +1,4 @@
-const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8001';
+const API = process.env.NEXT_PUBLIC_API_URL || 'https://5695-200-80-213-210.ngrok-free.app';
 
 export async function fetchEvents() {
   const res = await fetch(`${API}/api/events`);

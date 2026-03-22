@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { fetchEvents, escalateDispute, verifyOnChain } from '@/lib/api';
 import { SGEvent, getBlockchainBadge, getVerdictBadge } from '@/lib/types';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8001';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://5695-200-80-213-210.ngrok-free.app';
 
 type Step = { label: string; detail: string | null; done: boolean };
 

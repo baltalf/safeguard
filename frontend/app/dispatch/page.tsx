@@ -40,7 +40,7 @@ const TRAMOS: Record<string, string[]> = {
   'VJE-002': ['Mendoza → San Luís', 'San Luís → Córdoba', 'Córdoba → BA'],
   'VJE-003': ['Rosario → Zárate', 'Zárate → BA'],
 };
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8001';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://5695-200-80-213-210.ngrok-free.app';
 
 function statusBadge(status: string) {
   if (status === 'en_ruta') return <span className="badge badge-green">En ruta</span>;
